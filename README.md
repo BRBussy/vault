@@ -44,3 +44,4 @@ vault login root_token_here
 - https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
 - https://learn.hashicorp.com/vault/getting-started
 - https://hub.docker.com/_/vault
+- https://www.vaultproject.io/docs/
