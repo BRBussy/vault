@@ -41,6 +41,13 @@ The following example uses the root token
 vault login root_token_here
 ```
 
+## Enable KV (key value) secrets engine
+
+```
+# enable kv v1. (see https://www.vaultproject.io/docs/secrets/kv/ for differences between versions)
+vault secrets enable -version=1 kv
+```
+
 ## References:
 
 - https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
