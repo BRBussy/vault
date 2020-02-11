@@ -18,13 +18,15 @@ docker exec vault-server vault operator init
 
 # [3] take note of unseal keys and root token
 
-# [4] unseal (again the following can be done either in container or from host)
-# done at least 3 times with 3 separate keys
+# [4] unseal (done either in container or from host)
 vault operator unseal
 vault operator unseal either_key_is_here
 vault operator unseal # or key is entered at prompt
-# either the key is provided in the cli or at a prompt which is provided if key is not
-# Note: using the prompt is the recommended approach to avoid keys remaining in terminal history
+
+# Note:
+# - the 'vault operator unseal' command needs to be entered 3 times
+# - either the key is provided in the cli or at a prompt which is provided if key is not
+# - using the prompt is the recommended approach to avoid keys remaining in terminal history
 ```
 
 Vault server is now started, initialised and unsealed. It will remain sealed until the server is either restarted or resealed through API.
