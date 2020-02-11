@@ -31,6 +31,8 @@ vault operator unseal # or key is entered at prompt
 
 Vault server is now started, initialised and unsealed. It will remain sealed until the server is either restarted or resealed through API.
 
+Note: see helpful single command that can be used to run/restart vault at end of this readme
+
 ## Interact with vault server
 
 Before a Vault client can interact with Vault, it must authenticate against one of the auth methods (GitHub, LDAP, AppRole,etc.). Authentication works by verifying our identity and then generating a token to associate with that identity.
