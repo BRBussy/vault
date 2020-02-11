@@ -103,7 +103,7 @@ vault kv get secrets/hello
 ### Restarting
 
 - the file directory holds vault, so restarting server will seal this vault. So when restarting either unseal or delete directory and start from scratch
-- a useful cli command to do a complete restart:
+- a useful cli command to do a complete restart (run from root of this repo):
 
 ```
 echo "bring down old vault server" && \
