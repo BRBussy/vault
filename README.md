@@ -43,11 +43,16 @@ The following example uses the root token
 vault login root_token_here
 ```
 
-## Enable KV (key value) secrets engine
+## Secret Engines
+
+Vault behaves as a virtual file system. A secrets engine is the backend 'plugin' to which read/write/delete/list operations for this 'file system' are sent. The chosen secrets engine decides how to implement these operations. Secrets engines need to be enabled at particular path. Following is a basic example setting up the KV secrets engine. (https://www.vaultproject.io/docs/secrets/)
+
+### Enable KV (key value) secrets engine
+
+The kv secrets engine is used to store arbitrary secrets within the configured physical storage for Vault. This backend can be run in one of two modes. It can be a generic Key-Value store (v1) that stores one value for a key or versioning can be enabled (v2) and a configurable number of versions for each key will be stored. (https://www.vaultproject.io/docs/secrets/kv/)
 
 ```
 # enable secrets engine kv v1.
-# (see https://www.vaultproject.io/docs/secrets/kv/ for differences between versions)
 vault secrets enable -version=1 -path=secrets kv
 ```
 
