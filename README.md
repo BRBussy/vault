@@ -44,8 +44,9 @@ vault login root_token_here
 ## Enable KV (key value) secrets engine
 
 ```
-# enable kv v1. (see https://www.vaultproject.io/docs/secrets/kv/ for differences between versions)
-vault secrets enable -version=1 kv
+# enable secrets engine kv v1.
+# (see https://www.vaultproject.io/docs/secrets/kv/ for differences between versions)
+vault secrets enable -version=1 -path=secrets kv
 ```
 
 ## References:
@@ -54,3 +55,23 @@ vault secrets enable -version=1 kv
 - https://learn.hashicorp.com/vault/getting-started
 - https://hub.docker.com/_/vault
 - https://www.vaultproject.io/docs/
+
+## Notes
+
+### Restarting
+
+- the file directory holds vault, so restarting server will seal this vault. So when restarting either unseal or delete directory and start from scratch
+- a useful cli command to do a complete restart:
+
+```
+echo "bring down old vault server" && \
+docker-compose down && \
+echo "remove old vault filesystem store" && \
+rm -rf ./vault/file && \
+echo "bring up new vault server" && \
+docker-compose up -d && \
+echo "wait for server to start ..." && \
+sleep 5 && \
+echo "initialise new vault server" && \
+docker exec vault-server vault operator init
+```
