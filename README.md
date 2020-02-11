@@ -19,9 +19,9 @@ docker exec vault-server vault operator init
 # [3] take note of unseal keys and root token
 
 # [4] unseal (done either in container or from host)
-vault operator unseal
-vault operator unseal either_key_is_here
-vault operator unseal # or key is entered at prompt
+vault operator unseal                               # 1/3
+vault operator unseal either_key_is_here            # 2/3
+vault operator unseal #or key is entered at prompt  # 3/3
 
 # Note:
 # - the 'vault operator unseal' command needs to be entered 3 times
