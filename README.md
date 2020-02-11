@@ -49,12 +49,41 @@ vault login root_token_here
 vault secrets enable -version=1 -path=secrets kv
 ```
 
-## References:
+List secret engines with:
 
-- https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
-- https://learn.hashicorp.com/vault/getting-started
-- https://hub.docker.com/_/vault
-- https://www.vaultproject.io/docs/
+```
+vault secrets list --detailed
+```
+
+## Basic storage and retrieval with API
+
+### Store
+
+The general command form to store a secret is:
+
+```
+vault storageEngine put pathToSecret secret
+```
+
+The following example uses the kv (key-value) store
+
+```
+vault kv put secrets/hello foo=world
+```
+
+### Retrieve
+
+The general command form to retrieve a secret is:
+
+```
+vault storageEngine get pathToSecret
+```
+
+The following example uses the kv (key-value) store
+
+```
+vault kv get secrets/hello
+```
 
 ## Notes
 
@@ -75,3 +104,10 @@ sleep 5 && \
 echo "initialise new vault server" && \
 docker exec vault-server vault operator init
 ```
+
+## References:
+
+- https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
+- https://learn.hashicorp.com/vault/getting-started
+- https://hub.docker.com/_/vault
+- https://www.vaultproject.io/docs/
