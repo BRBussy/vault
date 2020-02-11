@@ -1,19 +1,27 @@
 # Hashicorp Vault
 
+References:
+
+- https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
+- https://learn.hashicorp.com/vault/getting-started
+
 ```
-# to start vault server in docker container
+# [1] start vault server in docker container
 docker-compose up -d
 
+# [2] initialise vault server either:
 
-# to initialise vault server either:
-
-# [1a] run following to exec into container from host:
+# run following to exec into container from host:
 docker exec -it vault-server /bin/sh
-# [1b] then in container:
+# then in container:
 vault operator init
 
-# OR
-
-# [2]
+# OR run the following from host:
 docker exec vault-server vault operator init
+
+# [3] take note of unseal keys and root token
+
+# [4] unseal (again the following can be done either in container or from host)
+
+
 ```
