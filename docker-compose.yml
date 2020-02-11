@@ -8,7 +8,6 @@ services:
       - 8200:8200
     volumes:
       - ./vault/config:/vault/config
-      - ./vault/policies:/vault/policies
       - ./vault/file:/vault/file
       - ./vault/logs:/vault/logs
     environment:

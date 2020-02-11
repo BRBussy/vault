@@ -1,9 +1,6 @@
-# Hashicorp Vault
+# Hashicorp Vault Setup with Docker
 
-References:
-
-- https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
-- https://learn.hashicorp.com/vault/getting-started
+## Start, initialise and unseal vault server
 
 ```
 # [1] start vault server in docker container
@@ -22,6 +19,28 @@ docker exec vault-server vault operator init
 # [3] take note of unseal keys and root token
 
 # [4] unseal (again the following can be done either in container or from host)
+# done at least 3 times with 3 separate keys
+vault operator unseal
+vault operator unseal either_key_is_here
+vault operator unseal # or key is entered at prompt
+# either the key is provided in the cli or at a prompt which is provided if key is not
+# Note: using the prompt is the recommended approach to avoid keys remaining in terminal history
+```
 
+Vault server is now started, initialised and unsealed. It will remain sealed until the server is either restarted or resealed through API.
+
+## Interact with vault server
+
+Before a Vault client can interact with Vault, it must authenticate against one of the auth methods (GitHub, LDAP, AppRole,etc.). Authentication works by verifying our identity and then generating a token to associate with that identity.
+
+The following example uses the root token
 
 ```
+vault login root_token_here
+```
+
+## References:
+
+- https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
+- https://learn.hashicorp.com/vault/getting-started
+- https://hub.docker.com/_/vault
