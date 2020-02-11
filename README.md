@@ -49,7 +49,7 @@ vault login root_token_here
 vault secrets enable -version=1 -path=secrets kv
 ```
 
-List secret engines with:
+List secrets engines and the paths on which they are mounted with:
 
 ```
 vault secrets list --detailed
@@ -77,6 +77,12 @@ The general command form to retrieve a secret is:
 
 ```
 vault storageEngine get pathToSecret
+```
+
+List secrets in kv engine with:
+
+```
+vault kv list engineMountPath
 ```
 
 The following example uses the kv (key-value) store
