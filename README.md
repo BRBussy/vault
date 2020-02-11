@@ -29,7 +29,7 @@ vault operator unseal #or key is entered at prompt  # 3/3
 # - using the prompt is the recommended approach to avoid keys remaining in terminal history
 ```
 
-Vault server is now started, initialised and unsealed. It will remain sealed until the server is either restarted or resealed through API.
+Vault server is now started, initialised and unsealed. It will remain unsealed until the server is either restarted or resealed through API.
 
 Note: see helpful single command that can be used to run/restart vault at end of this readme
 
