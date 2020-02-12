@@ -1,37 +1,48 @@
-# Hashicorp Vault Setup with Docker
+# Hashicorp Vault Docker - setup and basic use
 
-## Start, initialise and unseal vault server
+## Setup
+
+### Start and initialise vault server
+
+Run the following from the root of this repository:
 
 ```
-# [1] start vault server in docker container
-docker-compose up -d
+echo "start vault server in docker container" && \
+docker-compose up -d && \
 
-# [2] initialise vault server either:
-
-# run following to exec into container from host:
-docker exec -it vault-server /bin/sh
-# then in container:
-vault operator init
-
-# OR run the following from host:
+echo "initialise vault server" && \
 docker exec vault-server vault operator init
-
-# [3] take note of unseal keys and root token
-
-# [4] unseal (done either in container or from host)
-vault operator unseal                               # 1/3
-vault operator unseal either_key_is_here            # 2/3
-vault operator unseal #or key is entered at prompt  # 3/3
-
-# Note:
-# - the 'vault operator unseal' command needs to be entered 3 times
-# - either the key is provided in the cli or at a prompt which is provided if key is not
-# - using the prompt is the recommended approach to avoid keys remaining in terminal history
 ```
 
-Vault server is now started, initialised and unsealed. It will remain unsealed until the server is either restarted or resealed through API.
+**NB: Take note of the unseal keys and root token printed out after vault server initialisation! They are required to unseal and login.**
 
-Note: see helpful single command that can be used to run/restart vault at end of this readme
+### Unseal Vault
+
+Run the 'vault operator unseal' operation 3 times to unseal. The unseal command can either be entered along with an unseal key on the same line or on its own which will bring up a prompt to enter a key. Examples of running the command:
+
+- Unseal from the host using 'docker exec':
+
+```
+docker exec vault-server vault operator unseal __unseal-key-here___  # run command 3x
+```
+
+Note: unsealing from host like this it is not possible to use prompt mode (unless docker -it flag is used).
+
+- Unseal from within the container:
+
+```
+vault operator unseal                                # 1/3
+vault operator unseal either_key_is_here             # 2/3
+vault operator unseal # or key is entered at prompt  # 3/3
+```
+
+**Note: Unsealing from within the container and entering keys at prompt is recommended to prevent unseal keys remaining in terminal history.**
+
+Vault server is now started, initialised and unsealed. It will remain unsealed until the server is either stopped, restarted or resealed through API.
+
+Note that if the server comes down in any way (i.e. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file'. If it is then started again it will not be possbile to re-initialse the server unless these files are removed.
+
+---
 
 ## Interact with vault server
 
