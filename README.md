@@ -156,6 +156,12 @@ Example using kv engine:
 vault kv delete secrets/hello
 ```
 
+---
+
+## Policies
+
+---
+
 ## Notes
 
 ### Restarting
