@@ -1,20 +1,25 @@
-# Hashicorp Vault Docker - setup and basic use
+# Hashicorp Vault Docker - Setup and Basic Use Example/Tutorial
+
+Note: it can be assumed that all cli commands provided in this readme are run from the root of this repository - unless indicated otherwise
 
 ## Setup
 
 ### Start and initialise vault server
 
-Run the following from the root of this repository:
+Run the following:
 
 ```
 echo "start vault server in docker container" && \
 docker-compose up -d && \
 
+echo "give some time for server to start ..." && \
+sleep 5 && \
+
 echo "initialise vault server" && \
 docker exec vault-server vault operator init
 ```
 
-**NB: Take note of the unseal keys and root token printed out after vault server initialisation! They are required to unseal and login.**
+**NB: Take note of the unseal keys and root token printed out after vault server initialisation! They are required for unseal and login operations.**
 
 ### Unseal Vault
 
@@ -23,7 +28,7 @@ Run the 'vault operator unseal' operation 3 times to unseal. The unseal command 
 - Unseal from the host using 'docker exec':
 
 ```
-docker exec vault-server vault operator unseal __unseal-key-here___  # run command 3x
+docker exec vault-server vault operator unseal __unseal-key-here___  # run command 3x with different unseal keys
 ```
 
 Note: unsealing from host like this it is not possible to use prompt mode (unless docker -it flag is used).
@@ -31,6 +36,7 @@ Note: unsealing from host like this it is not possible to use prompt mode (unles
 - Unseal from within the container:
 
 ```
+# open session in container with: docker exec -it vault-server /bin/sh
 vault operator unseal                                # 1/3
 vault operator unseal either_key_is_here             # 2/3
 vault operator unseal # or key is entered at prompt  # 3/3
@@ -40,7 +46,20 @@ vault operator unseal # or key is entered at prompt  # 3/3
 
 Vault server is now started, initialised and unsealed. It will remain unsealed until the server is either stopped, restarted or resealed through API.
 
-Note that if the server comes down in any way (i.e. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file'. If it is then started again it will not be possbile to re-initialse the server unless these files are removed.
+Note that if the server comes down in any way (e.g. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file' (as configured in config/config.hcl). If it is then started again it will not be possbile to re-initialse the server unless these files are removed since the vault server will interpret the files as the existing already initialised vault. A useful command to perform a complete restart and reinitialisation of the vault server:
+
+```
+echo "bring down old vault server" && \
+docker-compose down && \
+echo "remove old vault filesystem store" && \
+rm -rf ./vault/file && \
+echo "bring up new vault server" && \
+docker-compose up -d && \
+echo "wait for server to start ..." && \
+sleep 5 && \
+echo "initialise new vault server" && \
+docker exec vault-server vault operator init
+```
 
 ---
 
@@ -115,19 +134,6 @@ vault kv get secrets/hello
 
 - the file directory holds vault, so restarting server will seal this vault. So when restarting either unseal or delete directory and start from scratch
 - a useful cli command to do a complete restart (run from root of this repo):
-
-```
-echo "bring down old vault server" && \
-docker-compose down && \
-echo "remove old vault filesystem store" && \
-rm -rf ./vault/file && \
-echo "bring up new vault server" && \
-docker-compose up -d && \
-echo "wait for server to start ..." && \
-sleep 5 && \
-echo "initialise new vault server" && \
-docker exec vault-server vault operator init
-```
 
 ## References:
 
