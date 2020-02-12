@@ -44,9 +44,11 @@ vault operator unseal # or key is entered at prompt  # 3/3
 
 Vault server is now started, initialised and unsealed. It will remain unsealed until the server is either stopped, restarted or resealed through API.
 
-Note that if the server comes down in any way (e.g. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file' (as configured in config/config.hcl). If it is then started again it will not be possbile to re-initialse the server unless these files are removed since the vault server will interpret the files as the existing already initialised vault. A useful command to perform a complete restart and reinitialisation of the vault server (run from root of repository on host):
+Note that if the server comes down in any way (e.g. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file' (as configured in config/config.hcl). If it is then started again it will not be possbile to re-initialse the server unless these files are removed since the vault server will interpret the files as the existing already initialised vault. A useful command to perform a complete restart and reinitialisation of the vault server:
 
 ```
+# -- run from repostory root on host --
+
 echo "bring down old vault server" && \
 docker-compose down && \
 echo "remove old vault filesystem store" && \
@@ -65,21 +67,27 @@ docker exec vault-server vault operator init
 
 Before a Vault client can interact with Vault, it must authenticate against one of the auth methods (GitHub, LDAP, AppRole,etc.). Authentication works by verifying our identity and then generating a token to associate with that identity.
 
-The following example uses the root token
+The following example uses the root token printed out during initialisation to log the vault api client in.
 
 ```
+# -- run inside container --
+
 vault login root_token_here
 ```
 
+---
+
 ## Secret Engines
 
-Vault behaves as a virtual file system. A secrets engine is the backend 'plugin' to which read/write/delete/list operations for this 'file system' are sent. The chosen secrets engine decides how to implement these operations. Secrets engines need to be enabled at particular path. Following is a basic example setting up the KV secrets engine. (https://www.vaultproject.io/docs/secrets/)
+Vault behaves as a virtual file system. A secrets engine is the backend 'plugin' to which read/write/delete/list operations for this 'file system' are sent. The chosen secrets engine decides how to implement these operations. Secrets engines need to be enabled at a particular path. Following is a basic example enabling up the KV secrets engine. (https://www.vaultproject.io/docs/secrets/)
 
 ### Enable KV (key value) secrets engine
 
-The kv secrets engine is used to store arbitrary secrets within the configured physical storage for Vault. This backend can be run in one of two modes. It can be a generic Key-Value store (v1) that stores one value for a key or versioning can be enabled (v2) and a configurable number of versions for each key will be stored. (https://www.vaultproject.io/docs/secrets/kv/)
+The kv secrets engine is used to store arbitrary secrets within the configured physical storage for Vault. This backend can be run in one of two modes. It can be a generic Key-Value store that stores one value for a key (i.e. v1) or versioning can be enabled and a configurable number of versions for each key will be stored (i.e. v2). (https://www.vaultproject.io/docs/secrets/kv/)
 
 ```
+# -- run inside container --
+
 # enable secrets engine kv v1.
 vault secrets enable -version=1 -path=secrets kv
 ```
@@ -94,13 +102,13 @@ vault secrets list --detailed
 
 ### Store
 
-The general command form to store a secret is:
+The general command to create a secret:
 
 ```
-vault storageEngine put pathToSecret secret
+vault secretsEngine put pathToSecret secret
 ```
 
-The following example uses the kv (key-value) store
+Example using the kv engine:
 
 ```
 vault kv put secrets/hello foo=world
@@ -108,22 +116,44 @@ vault kv put secrets/hello foo=world
 
 ### Retrieve
 
-The general command form to retrieve a secret is:
+The general command to retrieve a secret:
 
 ```
-vault storageEngine get pathToSecret
+vault secretsEngine get pathToSecret
 ```
 
-List secrets in kv engine with:
-
-```
-vault kv list engineMountPath
-```
-
-The following example uses the kv (key-value) store
+Example using the kv engine:
 
 ```
 vault kv get secrets/hello
+```
+
+### List
+
+The general comand to list secrets:
+
+```
+vault secretsEngine list engineMountPath
+```
+
+Example using kv engine at /secrets mount path:
+
+```
+vault kv list /secrets
+```
+
+### Delete
+
+The general command to delete a secret:
+
+```
+vault secretsEngine delete pathToSecret
+```
+
+Example using kv engine:
+
+```
+vault kv delete secrets/hello
 ```
 
 ## Notes
@@ -136,6 +166,6 @@ vault kv get secrets/hello
 ## References:
 
 - https://www.bogotobogo.com/DevOps/Docker/Docker-Vault-Consul.php
-- https://learn.hashicorp.com/vault/getting-started
+- https://learn.hashicorp.com/vault
 - https://hub.docker.com/_/vault
 - https://www.vaultproject.io/docs/
