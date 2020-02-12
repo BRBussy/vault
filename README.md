@@ -1,12 +1,10 @@
 # Hashicorp Vault Docker - Setup and Basic Use Example/Tutorial
 
-Note: it can be assumed that all cli commands provided in this readme are run from the root of this repository - unless indicated otherwise
-
 ## Setup
 
 ### Start and initialise vault server
 
-Run the following:
+Run the following from repository root on host:
 
 ```
 echo "start vault server in docker container" && \
@@ -46,7 +44,7 @@ vault operator unseal # or key is entered at prompt  # 3/3
 
 Vault server is now started, initialised and unsealed. It will remain unsealed until the server is either stopped, restarted or resealed through API.
 
-Note that if the server comes down in any way (e.g. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file' (as configured in config/config.hcl). If it is then started again it will not be possbile to re-initialse the server unless these files are removed since the vault server will interpret the files as the existing already initialised vault. A useful command to perform a complete restart and reinitialisation of the vault server:
+Note that if the server comes down in any way (e.g. if the container is removed) the sealed vault remains in the filesystem located at 'vault/file' (as configured in config/config.hcl). If it is then started again it will not be possbile to re-initialse the server unless these files are removed since the vault server will interpret the files as the existing already initialised vault. A useful command to perform a complete restart and reinitialisation of the vault server (run from root of repository on host):
 
 ```
 echo "bring down old vault server" && \
