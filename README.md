@@ -160,7 +160,12 @@ vault kv delete secrets/hello
 
 ## Policies
 
----
+Policies in Vault control what a user an access. Some built in policies cannot be removed:
+
+- default: set of common permissions included on all tokens by default
+- root: gives a token super admin permissions
+
+Policies are written in HCL or JSON.
 
 ## Notes
 
